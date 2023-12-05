@@ -1,0 +1,25 @@
+<div class="workers_container">
+  <h2 style="text-decoration: underline;">Lista de Trabajadores</h2>
+  <nz-table #workersTable [nzData]="listOfWorkers">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>DNI</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let worker of workersTable.data; index as i">
+        <td>{{ i + 1 }}</td>
+        <td>{{ worker.name }}</td>
+        <td>{{ worker.dni }}</td>
+        <td>
+          <button nz-button (click)="openModal(worker)">Ver</button>
+          <nz-divider nzType="vertical"></nz-divider>
+          <button nz-button nzType="primary" (click)="openModal(worker, true)">Editar</button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

@@ -1,0 +1,49 @@
+<div class="wrapper-calendar">
+  <div class="header-calendar">
+    <div>
+      <button (click)="changeMonth(-1)" class="btn-prev">Antes</button>
+    </div>
+    <h1>{{ dateSelect | date : "MMMM, yyyy" }}</h1>
+    <div>
+      <button (click)="changeMonth(1)" class="btn-next">Siguiente</button>
+    </div>
+  </div>
+  <ol>
+    <li *ngFor="let day of week" class="day-name">{{ day | slice : 0 : 3 }}</li>
+  </ol>
+  <ol class="calendar-list-container">
+    <li
+      (click)="clickDay(day)"
+      [style.gridColumnStart]="first ? startDayIndex : 'auto'"
+      *ngFor="let day of monthSelect; let first = first"
+      class="calendar-container"
+    >
+      <div class="calendar-number" [ngStyle]="{ 'background-color': day?.state?.color ?? '#ffffff' }">
+        <span>{{ day?.value }}</span>
+        <div class="d">{{ day?.data?.estado ?? '-' | uppercase}}</div>
+        <!-- <input type="text" name="text" id="text"> -->
+      </div>
+    </li>
+  </ol>
+  <!-- <div class="calendar_container">
+    {{ monthSelect[0].indexWeek }}
+    <div class="day-name">
+      <span *ngFor="let name of week">
+        {{name | slice : 0 : 3}}
+      </span>
+    </div>
+    <div class="calendar">
+      <div *ngFor="let day of monthSelect; let i = index"
+        [style.grid-column-start]="day.value == 1 ? startDayIndex : ''"
+      >
+        <span *ngIf="i % 7 == 0" class="clear"></span>
+        <span>{{day.value}}</span>
+      </div>
+    </div>
+    <hr>
+  </div> -->
+
+</div>
+
+<hr />
+<div>Fecha: {{ dateValue | date }}</div>
