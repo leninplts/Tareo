@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { WorkerService } from 'src/app/core/services/worker.service';
 import { TareoComponent } from 'src/app/features/components/modal/tareo/tareo.component';
 import { Worker } from 'src/app/features/interfaces/worker.interface';
 
@@ -10,80 +11,19 @@ import { Worker } from 'src/app/features/interfaces/worker.interface';
 })
 export class DashboardComponent implements OnInit {
 
-  listOfWorkers: Worker[] = [
-    {
-      name: 'Lenin Jose mamani',
-      dni: '70125199',
-      year: 2023,
-      month: 11,
-      tareos: [
-        {
-          dia: 1,
-          estado: 'FI',
-          note: 'falta injustificada por el trabajador'
-        },
-        {
-          dia: 2,
-          estado: 'DL',
-          note: ''
-        },
-        {
-          dia: 3,
-          estado: 'DL',
-          note: ''
-        },
-        {
-          dia: 4,
-          estado: 'DL',
-          note: ''
-        },
-        {
-          dia: 5,
-          estado: 'FJ',
-          note: ''
-        },
-        {
-          dia: 6,
-          estado: 'DD',
-          note: ''
-        },
-      ]
-    },
-    {
-      name: 'Rossy Pancca Sardon',
-      dni: '74074424',
-      year: 2023,
-      month: 12,
-      tareos: [
-        {
-          dia: 1,
-          estado: 'DL',
-          note: ''
-        },
-        {
-          dia: 2,
-          estado: 'FJ',
-          note: ''
-        },
-        {
-          dia: 3,
-          estado: 'FI',
-          note: ''
-        },
-        {
-          dia: 4,
-          estado: 'DD',
-          note: ''
-        },
-      ]
-    }
-  ]
+  listOfWorkers: Worker[] = []
   constructor(
-    private modalService: NzModalService
+    private modalService: NzModalService,
+    private workerService: WorkerService
   ) { }
 
   ngOnInit(): void {
-    // this.openModal(this.listOfWorkers[0])
+    this.workerService.getAll().subscribe(
+      res => {
+        this.listOfWorkers = res
+        // this.openModal(this.listOfWorkers[0])
+      }
+    )
   }
 
   openModal(worker: Worker, edit: boolean = false) {

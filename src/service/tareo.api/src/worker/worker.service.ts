@@ -28,8 +28,11 @@ export class WorkerService {
     return { message: `Item ${item.name} creado` };
   }
 
-  findAll() {
-    return `This action returns all worker`;
+  async findAll() {
+    const workers = await this.workerRepository.find({
+      relations: { tareos: false },
+    });
+    return workers;
   }
 
   findOne(id: number) {

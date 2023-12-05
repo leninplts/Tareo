@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { TareoService } from './tareo.service';
 import { CreateTareoDto } from './dto/create-tareo.dto';
@@ -26,7 +27,15 @@ export class TareoController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @Body() data: any) {
+  findOne(
+    @Param('id') id: string,
+    @Query('year') year: number,
+    @Query('month') month: number,
+  ) {
+    const data = {
+      year: +year,
+      month: +month,
+    };
     return this.tareoService.findOne(+id, data);
   }
 

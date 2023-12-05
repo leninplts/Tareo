@@ -12,7 +12,7 @@ export class Tareo {
   @Column()
   month: number;
 
-  @Column()
+  @Column({ type: 'text', nullable: true })
   tareo: string;
 
   @ManyToOne(() => Worker, (worker) => worker.tareos)

@@ -2,7 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { TareoFormComponent } from '../tareo-form/tareo-form.component';
-import { Worker } from 'src/app/features/interfaces/worker.interface';
+import { ITareo, Worker } from 'src/app/features/interfaces/worker.interface';
+import { TareoService } from 'src/app/core/services/tareo.service';
 
 @Component({
   selector: 'app-tareo',
@@ -34,17 +35,69 @@ export class TareoComponent implements OnInit {
   dateValue: any;
   localDate: any;
   startDayIndex: number = 0;
+  today: Date = new Date();
+  year: number = this.today.getFullYear()
+  month: number = this.today.getMonth() + 1
 
   constructor(
-    private modalService: NzModalService
+    private modalService: NzModalService,
+    private tareoService: TareoService
   ) {}
 
   ngOnInit(): void {
-    console.log('object');
-    this.getDaysFromDate(12, 2023);
+    this.getTareoByWorker(this.year, this.month)
   }
 
-  getDaysFromDate(month: number, year: number) {
+  getTareoByWorker(year: number, month: number) {
+    this.tareoService.getTareo(this.worker.id, year, month).subscribe(
+      res => {
+        if (res == null) {
+          const tareoJson = this.createTareo()
+          console.log(tareoJson.length);
+          let body = {
+            workerId: this.worker.id,
+            year: year,
+            month: month,
+            tareo: tareoJson,
+          }
+          this.tareoService.create(body).subscribe(
+            res => {
+              this.worker = res
+              this.decodeJson(this.worker.tareos[0].tareo)
+              this.getDaysFromDate(year, month);
+            }
+          )
+        } else {
+          // console.log(JSON.parse(this.worker.tareos[0].tareo.toString()) as ITareo);
+          this.worker = res
+          this.decodeJson(this.worker.tareos[0].tareo)
+          this.getDaysFromDate(year, month);
+        }
+      }
+    )
+  }
+
+  decodeJson(tareosJson: ITareo[]) {
+    this.worker.tareos[0].tareo = JSON.parse(tareosJson.toString()) as ITareo[]
+  }
+
+  createTareo() {
+    const startDate = moment.utc(`${this.year}/${this.month}/01 06:00:00`);
+    const endDate = startDate.clone().endOf('month');
+    const diffDays = endDate.diff(startDate, 'days', true);
+    const numberDays = Math.round(diffDays);
+    const arrayDays = Object.keys([...Array(numberDays)]).map((a: any) => {
+      a = parseInt(a) + 1;
+      return {
+        day: a,
+        state: '',
+        note: '',
+      };
+    });
+    return JSON.stringify(arrayDays)
+  }
+
+  getDaysFromDate(year: number, month: number) {
     const startDate = moment.utc(`${year}/${month}/01 06:00:00`);
     const endDate = startDate.clone().endOf('month');
     this.dateSelect = startDate;
@@ -56,8 +109,8 @@ export class TareoComponent implements OnInit {
     const arrayDays = Object.keys([...Array(numberDays)]).map((a: any) => {
       a = parseInt(a) + 1;
       const dayObject = moment(`${year}-${month}-${a} 06:00:00`);
-      const tareo = this.worker.tareos.find(tareo => tareo.dia == a);
-      const color = this.states.find(color => color.name == tareo?.estado)
+      const tareo = this.worker.tareos[0].tareo.find(tareo => tareo.day == a);
+      const color = this.states.find(color => color.name == tareo?.state)
       return {
         name: dayObject.format('dddd'),
         value: a,
@@ -70,16 +123,16 @@ export class TareoComponent implements OnInit {
       };
     });
     this.monthSelect = arrayDays;
-    console.log(this.monthSelect);
   }
 
   changeMonth(flag: number) {
     if (flag < 0) {
       const prevDate = this.dateSelect.clone().subtract(1, 'month');
-      this.getDaysFromDate(prevDate.format('MM'), prevDate.format('YYYY'));
+      this.getTareoByWorker(prevDate.format('YYYY'), prevDate.format('MM'))
+      // this.getDaysFromDate(prevDate.format('YYYY'), prevDate.format('MM'));
     } else {
       const nextDate = this.dateSelect.clone().add(1, 'month');
-      this.getDaysFromDate(nextDate.format('MM'), nextDate.format('YYYY'));
+      this.getTareoByWorker(nextDate.format('YYYY'), nextDate.format('MM'));
     }
   }
 

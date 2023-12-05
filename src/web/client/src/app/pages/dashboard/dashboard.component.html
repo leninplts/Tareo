@@ -12,7 +12,7 @@
     <tbody>
       <tr *ngFor="let worker of workersTable.data; index as i">
         <td>{{ i + 1 }}</td>
-        <td>{{ worker.name }}</td>
+        <td>{{ worker.name | uppercase }}</td>
         <td>{{ worker.dni }}</td>
         <td>
           <button nz-button (click)="openModal(worker)">Ver</button>

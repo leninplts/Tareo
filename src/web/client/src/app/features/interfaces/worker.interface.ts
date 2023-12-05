@@ -1,18 +1,25 @@
 interface Worker {
+  id: number;
   name: string;
   dni: string;
-  year: number;
-  month: number;
-  tareos: Tareos[]
+  tareos: Tareo[]
 }
 
-interface Tareos {
-  dia: number,
-  estado?: string,
+interface Tareo {
+  id: number,
+  year: number;
+  month: number;
+  tareo: ITareo[];
+}
+
+interface ITareo {
+  day: number,
+  state?: string,
   note?: string
 }
 
 export {
   Worker,
-  Tareos
+  Tareo,
+  ITareo
 }

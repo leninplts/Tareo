@@ -15,18 +15,23 @@ export class TareoService {
     private readonly workerRepository: Repository<Worker>,
   ) {}
   async create(createTareoDto: CreateTareoDto) {
-    console.log(createTareoDto);
-    const { workerId, ...newCreateTareoDto } = createTareoDto;
-    const { year, month } = newCreateTareoDto;
+    const { workerId, year, month } = createTareoDto;
     const worker = await this.workerRepository.findOneBy({ id: workerId });
     if (!worker)
       throw new BadRequestException({
         message: `El nombre: ${workerId} aun no existe`,
       });
-    const item = this.tareoRepository.create(createTareoDto);
+    const item = await this.tareoRepository.create(createTareoDto);
     item.worker = worker;
-    this.tareoRepository.save(item);
-    return { message: `Tareo ${year}-${month} creado` };
+    await this.tareoRepository.save(item);
+    const returnWorker = await this.workerRepository
+      .createQueryBuilder('worker')
+      .leftJoinAndSelect('worker.tareos', 'tareo')
+      .where(`worker.id = ${workerId}`)
+      .andWhere(`tareo.year = ${year}`)
+      .andWhere(`tareo.month = ${month}`)
+      .getOne();
+    return returnWorker;
   }
 
   findAll() {
