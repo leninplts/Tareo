@@ -83,7 +83,7 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.openModal(this.listOfWorkers[0])
+    // this.openModal(this.listOfWorkers[0])
   }
 
   openModal(worker: Worker, edit: boolean = false) {
