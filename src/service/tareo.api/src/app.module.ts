@@ -14,6 +14,7 @@ import {
 import { Worker } from './worker/entities/worker.entity';
 import { TareoModule } from './tareo/tareo.module';
 import { Tareo } from './tareo/entities/tareo.entity';
+import { PdfModule } from './pdf/pdf.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { Tareo } from './tareo/entities/tareo.entity';
       inject: [ConfigService],
     }),
     TareoModule,
+    PdfModule,
   ],
   controllers: [AppController],
   providers: [AppService],

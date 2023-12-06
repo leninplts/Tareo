@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+      /* Elaborado por Pedro Diaz Guarniz */
+
+      :root {
+        --bg-primary: #e8e8e8;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Roboto Condensed", sans-serif;
+        background-color: var(--bg-primary);
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .container {
+        width: 480px;
+        height: 800px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding-left: 16px;
+        padding-right: 16px;
+        padding-top: 32px;
+        padding-bottom: 32px;
+      }
+
+      .container__card {
+        width: 100%;
+        height: 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 56px 80px 160px 1fr;
+      }
+
+      .card__head-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .card__head-title-code span {
+        font-size: 14 px;
+        font-weight: 400;
+        color: #7e828e;
+      }
+
+      .card__head-title-icon-box {
+        width: 32px;
+        height: 32px;
+        border-radius: 4px;
+        background-color: #f7f7f7;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        outline: none;
+        border: none;
+      }
+
+      .card__head-title-icon-box:hover {
+        background-color: #e8e8e8;
+      }
+
+      .card__head-info-person {
+        margin-bottom: 8px;
+      }
+
+      .card__head-info-person:has(span) {
+        font-size: 32px;
+        font-weight: 700;
+      }
+
+      .card__head-info-status:has(span) {
+        background-color: #d4f6dc;
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        color: #12692d;
+      }
+
+      .card__head-itinerario {
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: 1fr 1px 1fr;
+        grid-template-rows: 1fr;
+        border: 1px solid #e7e8ea;
+        border-radius: 16px;
+      }
+
+      .divider {
+        width: 1px;
+        height: 100%;
+        background-color: #e7e8ea;
+      }
+
+      .card__head-itinerario-check {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .card__head-itinerario-check ion-icon {
+        font-size: 28px;
+        color: #606377;
+        margin-bottom: 8px;
+      }
+
+      .card__head-itinerario-check span {
+        font-size: 16px;
+        font-weight: 400;
+        color: #606377;
+        margin-bottom: 4px;
+      }
+
+      .card__head-itinerario-check p {
+        font-size: 16px;
+        font-weight: 400;
+        color: #000;
+        letter-spacing: 1px;
+      }
+
+      .card__body-coste {
+        width: 100%;
+        background-color: #f4f4f6;
+        border-radius: 16px;
+        margin-top: 16px;
+        padding: 16px;
+      }
+
+      .card__body-coste-details {
+        display: grid;
+        grid-template-columns: 1fr;
+        height: 100%;
+        grid-template-rows: 48px 32px 1fr 48px;
+      }
+
+      .card__body-coste-details-codes {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .card__body-coste-details-codes .code {
+        font-size: 14px;
+        font-weight: 500;
+        color: #389fff;
+      }
+
+      .card__body-coste-details-codes .date {
+        font-size: 14px;
+        font-weight: 500;
+        color: #7e828e;
+      }
+
+      .card__body-coste-details h3 {
+        padding-top: 16px;
+      }
+
+      .card__body-coste-details-money {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+        height: fit-content;
+      }
+
+      .card__body-coste-details-money .coste {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 8px;
+        color: #626678;
+      }
+
+      .card__body-coste-details-money .bage {
+        display: flex;
+        justify-content: start;
+        column-gap: 8px;
+      }
+
+      .card__body-coste-details-money .bage span {
+        display: inline-block;
+        background-color: #f4f4f6;
+        padding: 4px 8px;
+        border-radius: 4px;
+      }
+
+      .card__body-coste-details-money .bage .red {
+        background-color: #ffdcda;
+        color: #b85a55;
+      }
+
+      .card__body-coste-details-money .bage .lila {
+        background-color: #eedbf9;
+        color: #54276d;
+      }
+
+      .card__body-coste-details-money .bage .blue {
+        background-color: #d0e3f4;
+        color: #10569c;
+      }
+
+      .card__body-coste-details-money .bage .yellow {
+        background-color: #ffeacb;
+        color: #9c6927;
+      }
+
+      .card__body-coste-details-money .item {
+        margin-bottom: 16px;
+        border-bottom: 1px solid #e7e8ea;
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+
+      .Total {
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        margin-bottom: 8px;
+        column-gap: 8px;
+        font-weight: 700;
+      }
+
+      .card__body-coste-details-money .bage .lila:hover {
+        background-color: #d9bff9;
+        cursor: pointer;
+      }
+
+      .card__body-coste-details-money .bage .red:hover {
+        background-color: #f9c6c3;
+        cursor: pointer;
+      }
+
+      .card__body-coste-details-money .bage .blue:hover {
+        background-color: #b8d9f4;
+        cursor: pointer;
+      }
+
+      .card__body-coste-details-money .bage .yellow:hover {
+        background-color: #f4e2b8;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <body>
+      <div class="container">
+        <div class="container__card">
+          <!-- Titulo de la Card -->
+          <div class="card__head-title">
+            <div class="card__head-title-code">
+              <span>BC-GLGWPAQ6</span>
+            </div>
+            <div class="card__head-title-icon">
+              <button class="card__head-title-icon-box">
+                <ion-icon name="close-outline"></ion-icon>
+              </button>
+            </div>
+          </div>
+          <!-- Información de la card -->
+          <div class="card__head-info">
+            <div class="card__head-info-person">
+              <span>Peter Diaz</span>
+            </div>
+            <div class="card__head-info-status">
+              <span>Paid</span>
+            </div>
+          </div>
+          <!-- Itinerario de la Card -->
+          <div class="card__head-itinerario">
+            <div class="card__head-itinerario-check">
+              <ion-icon name="log-in-outline"></ion-icon>
+              <span>Check In</span>
+              <p>November 22, 2023</p>
+            </div>
+            <div class="divider"></div>
+            <div class="card__head-itinerario-check">
+              <ion-icon name="log-out-outline"></ion-icon>
+              <span>Check Out</span>
+              <p>November 24, 2023</p>
+            </div>
+          </div>
+          <!-- Información de Pago -->
+          <div class="card__body-coste">
+            <div class="card__body-coste-details">
+              <h3>Airbnb Payout</h3>
+              <div class="card__body-coste-details-codes">
+                <a href="https://www.google.com/" target="_blank"><span class="code">0G42WUS6TQ4ra9jfDKXpVEMBID</span></a>
+                <span class="date">December 22, 2023</span>
+              </div>
+
+              <div class="card__body-coste-details-money">
+                <!-- Item 1 -->
+                <div class="item">
+                  <div class="coste">
+                    <span>Reservation</span>
+                    <span>$146.00</span>
+                  </div>
+                  <div class="bage">
+                    <span class="red">AirbnbGeneral1</span>
+                    <span class="lila">AirbnbGeneral1</span>
+                  </div>
+                </div>
+                <!-- Item 2 -->
+                <div class="item">
+                  <div class="coste">
+                    <span>Cleaning fee</span>
+                    <span>$80.00</span>
+                  </div>
+                  <div class="bage">
+                    <span class="red">AirbnbGeneral1</span>
+                    <span class="blue">Cleaning_Fee</span>
+                  </div>
+                </div>
+                <!-- Item 3 -->
+                <div class="item">
+                  <div class="coste">
+                    <span>Service fee</span>
+                    <span>$8.13</span>
+                  </div>
+                  <div class="bage">
+                    <span class="red">AirbnbGeneral1</span>
+                    <span class="yellow">OTA_Fee</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="Total">
+                <span>Total</span>
+                <span>$234.13</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script
+        type="module"
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+      ></script>
+      <script
+        nomodule
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+      ></script>
+    </body>
+  </body>
+</html>
