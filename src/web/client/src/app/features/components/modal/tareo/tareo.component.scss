@@ -1,9 +1,22 @@
 // *{
 //   outline: none !important
 // }
+:host {
+  position: relative;
+}
 
 div.wrapper-calendar {
-  margin: 1rem;
+  .content_worker {
+    display: flex;
+    flex-direction: column;
+    &_item {
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+  margin: .5rem;
   padding: .5rem;
   border: solid 1px #eaeaea;
   box-shadow: 0 0 10px #e4e4e4;
@@ -37,8 +50,11 @@ li.calendar-container {
     width: 100%;
     display: flex;
     flex-direction: column;
+    border-radius: 5px;
+    padding: 3px 5px;
     span {
       border-bottom: 1px dotted black;
+      font-size: 13px;
     }
   }
 }
@@ -112,4 +128,44 @@ h2 {
     grid-column: 1;
     clear: both;
   }
+}
+
+// RESUME
+.resume {
+  padding: 10px 20px;
+  width: 100%;
+  background: #f5f5f5;
+  &_container {
+    width: 100%;
+    &_content {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      &_item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px dotted;
+        margin: 5px 0;
+        &_text {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          div.dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 2.5px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.modal_footer {
+  padding: 10px 20px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
 }

@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NzModalRef } from 'ng-zorro-antd/modal';
+import { TareoService } from 'src/app/core/services/tareo.service';
+import { ITareo, Worker } from 'src/app/features/interfaces/worker.interface';
+import { statesDictionary } from 'src/app/features/models/state.model';
 
 @Component({
   selector: 'app-tareo-form',
@@ -8,15 +11,20 @@ import { NzModalRef } from 'ng-zorro-antd/modal';
   styleUrls: ['./tareo-form.component.scss']
 })
 export class TareoFormComponent implements OnInit {
-  @Input() tareo: any;
+  @Input() item: any;
+  statesDictionary = statesDictionary
   formGroup: FormGroup;
+  worker: Worker;
+  tareo: ITareo;
   constructor(
     private modalRef: NzModalRef,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private tareoService: TareoService
   ) { }
 
   ngOnInit(): void {
-    console.log(this.tareo);
+    this.worker = this.item.worker
+    this.tareo = this.item.detail
     this.initializeForm()
     this.fillFormValue();
   }
@@ -30,17 +38,31 @@ export class TareoFormComponent implements OnInit {
 
   fillFormValue() {
     this.formGroup.patchValue({
-      stateId: this.tareo.state.id,
-      note: this.tareo.data.note
+      stateId: this.tareo.state ?? 0,
+      note: this.tareo.note
     })
   }
 
   onCancel() {
-    this.modalRef.close()
+    this.modalRef.close({ edit: false })
   }
 
   onSave() {
-    console.log(this.formGroup);
+    this.worker.tareos[0].tareo.map((t: ITareo) => {
+      if(t.day == this.tareo.day) {
+        t.state = this.formGroup.getRawValue().stateId ?? '',
+        t.note = this.formGroup.getRawValue().note ?? ''
+      }
+    })
+    let body = {
+      workerId: this.worker.id,
+      year: this.item.currentDate.year,
+      month: this.item.currentDate.month,
+      tareo: JSON.stringify(this.worker.tareos[0].tareo),
+    }
+    this.tareoService.updateTareo(this.worker.tareos[0].id, body).subscribe(
+      res => this.modalRef.close({ edit: true })
+    )
   }
 
 }

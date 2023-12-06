@@ -1,9 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import * as moment from 'moment';
-import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { TareoFormComponent } from '../tareo-form/tareo-form.component';
 import { ITareo, Worker } from 'src/app/features/interfaces/worker.interface';
 import { TareoService } from 'src/app/core/services/tareo.service';
+import { IState } from 'src/app/features/interfaces/states.inteface';
+import { statesDictionary } from 'src/app/features/models/state.model';
 
 @Component({
   selector: 'app-tareo',
@@ -14,12 +16,7 @@ export class TareoComponent implements OnInit {
   @Input() worker: Worker;
   @Input() edit: boolean;
 
-  states = [
-    { id: 1,name: 'DL', color: '#24fc077e', description: 'Dia laborado'},
-    { id: 2,name: 'FJ', color: '#5bf4ffa6', description: 'Falta justificada'},
-    { id: 3,name: 'FI', color: '#ff5b5ba6', description: 'Falta injustificada'},
-    { id: 4,name: 'DD', color: '#fcff42cb', description: 'Descanso'},
-  ]
+  statesDictionary = statesDictionary
   week: any = [
     'Lunes',
     'Martes',
@@ -32,16 +29,33 @@ export class TareoComponent implements OnInit {
 
   monthSelect: any[];
   dateSelect: any;
-  dateValue: any;
   localDate: any;
   startDayIndex: number = 0;
   today: Date = new Date();
   year: number = this.today.getFullYear()
   month: number = this.today.getMonth() + 1
+  day: number = this.today.getDate()
+
+  // counting days
+  orderedWorkDays = [
+    'workedDays', 
+    'restDays',
+    'justifiedAbsenceDays',
+    'unjustifiedAbsenceDays',
+    'noFilledDays',
+  ];
+  workDayDetail : any = {
+    justifiedAbsenceDays: { title: 'Faltas justificadas', value: 0, prefix: 'FJ' },
+    workedDays: { title: 'Dias trabajados', value: 0, prefix: 'DL' },
+    restDays: { title: 'Dias de descanso', value: 0, prefix: 'DD' },
+    unjustifiedAbsenceDays: { title: 'Faltas Injustificadas', value: 0, prefix: 'FI' },
+    noFilledDays: { title: 'Dias no registrados', value: 0, prefix: 'FD' }
+  }
 
   constructor(
     private modalService: NzModalService,
-    private tareoService: TareoService
+    private tareoService: TareoService,
+    private modalRef: NzModalRef,
   ) {}
 
   ngOnInit(): void {
@@ -49,11 +63,11 @@ export class TareoComponent implements OnInit {
   }
 
   getTareoByWorker(year: number, month: number) {
-    this.tareoService.getTareo(this.worker.id, year, month).subscribe(
-      res => {
+    this.clearWorkDayDetail()
+    this.tareoService.getTareo(this.worker.id, year, month).subscribe({
+      next: res => {
         if (res == null) {
-          const tareoJson = this.createTareo()
-          console.log(tareoJson.length);
+          const tareoJson = this.createTareo(year, month)
           let body = {
             workerId: this.worker.id,
             year: year,
@@ -65,24 +79,44 @@ export class TareoComponent implements OnInit {
               this.worker = res
               this.decodeJson(this.worker.tareos[0].tareo)
               this.getDaysFromDate(year, month);
+              this.fillCounters()
             }
           )
         } else {
-          // console.log(JSON.parse(this.worker.tareos[0].tareo.toString()) as ITareo);
           this.worker = res
           this.decodeJson(this.worker.tareos[0].tareo)
           this.getDaysFromDate(year, month);
+          this.fillCounters()
         }
-      }
-    )
+      },
+      // complete: () => this.fillCounters()
+    })
+  }
+
+  fillCounters() {
+    this.worker.tareos[0].tareo.forEach(t => {
+      if(t.state == 'DL') ++this.workDayDetail.workedDays.value
+      if(t.state == 'DD') ++this.workDayDetail.restDays.value
+      if(t.state == 'FJ') ++this.workDayDetail.justifiedAbsenceDays.value
+      if(t.state == 'FI') ++this.workDayDetail.unjustifiedAbsenceDays.value
+      if(t.state == '') ++this.workDayDetail.noFilledDays.value
+    })
+  }
+
+  clearWorkDayDetail() {
+    this.workDayDetail.workedDays.value = 0
+    this.workDayDetail.restDays.value = 0
+    this.workDayDetail.justifiedAbsenceDays.value = 0
+    this.workDayDetail.unjustifiedAbsenceDays.value = 0
+    this.workDayDetail.noFilledDays.value = 0
   }
 
   decodeJson(tareosJson: ITareo[]) {
     this.worker.tareos[0].tareo = JSON.parse(tareosJson.toString()) as ITareo[]
   }
 
-  createTareo() {
-    const startDate = moment.utc(`${this.year}/${this.month}/01 06:00:00`);
+  createTareo(year: number, month: number) {
+    const startDate = moment.utc(`${year}-${month}-01T06:00:00`);
     const endDate = startDate.clone().endOf('month');
     const diffDays = endDate.diff(startDate, 'days', true);
     const numberDays = Math.round(diffDays);
@@ -98,7 +132,7 @@ export class TareoComponent implements OnInit {
   }
 
   getDaysFromDate(year: number, month: number) {
-    const startDate = moment.utc(`${year}/${month}/01 06:00:00`);
+    const startDate = moment.utc(`${year}-${month}-01T06:00:00`);
     const endDate = startDate.clone().endOf('month');
     this.dateSelect = startDate;
 
@@ -108,18 +142,11 @@ export class TareoComponent implements OnInit {
 
     const arrayDays = Object.keys([...Array(numberDays)]).map((a: any) => {
       a = parseInt(a) + 1;
-      const dayObject = moment(`${year}-${month}-${a} 06:00:00`);
+      const dayObject = moment(`${year}-${month}-${a <= 9 ? `0${a}` : a + ''}T06:00:00`);
       const tareo = this.worker.tareos[0].tareo.find(tareo => tareo.day == a);
-      const color = this.states.find(color => color.name == tareo?.state)
       return {
-        name: dayObject.format('dddd'),
-        value: a,
-        indexWeek: dayObject.isoWeekday(),
-        data: tareo,
-        user: this.worker,
-        date: moment.utc(`${year}/${month}/${a} 06:00:00`),
-        state: color,
-        states: this.states
+        currentDate: { year, month, day: a, date: dayObject },
+        detail: tareo,
       };
     });
     this.monthSelect = arrayDays;
@@ -129,31 +156,37 @@ export class TareoComponent implements OnInit {
     if (flag < 0) {
       const prevDate = this.dateSelect.clone().subtract(1, 'month');
       this.getTareoByWorker(prevDate.format('YYYY'), prevDate.format('MM'))
-      // this.getDaysFromDate(prevDate.format('YYYY'), prevDate.format('MM'));
     } else {
       const nextDate = this.dateSelect.clone().add(1, 'month');
       this.getTareoByWorker(nextDate.format('YYYY'), nextDate.format('MM'));
     }
   }
 
-  clickDay(day: { value: any; }) {
-    const monthYear = this.dateSelect.format('YYYY-MM');
-    const parse = `${monthYear}-${day.value}`;
-    const objectDate = moment(parse);
-    this.dateValue = objectDate;
+  clickDay(item: any) {
+    const body = {
+      ...item,
+      worker: this.worker
+    }
     const myModal = this.modalService.create({
       // @ts-ignore
       nzTitle: null,
-      // nzClassName: 'full-screen',
       nzContent: TareoFormComponent,
       nzFooter: null,
       nzNoAnimation: true,
       nzWidth: 400,
-      nzComponentParams: { tareo: day }
+      nzComponentParams: { item: body }
     });
     myModal.afterClose.subscribe((result) => {
-      // this.mapboxHelper.clearSelectedNearby();
+      if(result.edit && result.edit == true) this.getTareoByWorker(item.currentDate.year, item.currentDate.month)
     })
   }
 
+  close () {
+    this.modalRef.close()
+  }
+
+  // reports
+  generateReport() {
+    console.log('generar reporte');
+  }
 }

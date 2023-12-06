@@ -1,8 +1,8 @@
 <div class="tareo_container">
-  <h4 style="text-decoration: underline; font-weight: 700;">{{ tareo.date | date : "EEEE, MMMM dd y" | uppercase }}</h4>
+  <h4 style="text-decoration: underline; font-weight: 700;">{{ item.currentDate.date | date : "EEEE, MMMM dd y" | uppercase }}</h4>
   <div class="">
     <span>Trabajador: </span>
-    <span style="text-decoration: underline dotted; font-weight: 600;">{{ tareo.user.name | uppercase }}</span>
+    <span style="text-decoration: underline dotted; font-weight: 600;">{{ item.worker.name | uppercase }}</span>
     <form [formGroup]="formGroup">
       <div nz-row>
         <div
@@ -26,9 +26,9 @@
                   nzPlaceHolder="Elija el estado del trabajador"
                 >
                   <nz-option
-                    *ngFor="let item of tareo.states"
-                    [nzLabel]="item.description"
-                    [nzValue]="item.id"
+                    *ngFor="let state of statesDictionary | keyvalue"
+                    [nzLabel]="state.value.description!"
+                    [nzValue]="state.key"
                   ></nz-option>
                 </nz-select>
               </nz-input-group>

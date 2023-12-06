@@ -27,4 +27,7 @@ export class TareoService {
   public update(id: number, product: any): Observable<any> {
     return this.httpClient.patch<any>(`${this.apiUrl}items/${id}`, product)
   }
+  public updateTareo(id: number, body: any): Observable<any> {
+    return this.httpClient.patch<any>(`${this.apiUrl}tareo/${id}`, body)
+  }
 }

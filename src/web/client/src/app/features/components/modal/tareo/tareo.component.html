@@ -1,4 +1,15 @@
 <div class="wrapper-calendar">
+  <div class="content_worker">
+    <div class="content_worker_item">
+      <div class="">Tareo de:</div>
+      <div class="bold">{{ worker.name }}</div>
+    </div>
+    <div class="content_worker_item">
+      <div class="">DNI:</div>
+      <div class="bold">{{ worker.dni }}</div>
+    </div>
+  </div>
+  <hr>
   <div class="header-calendar">
     <div>
       <button (click)="changeMonth(-1)" class="btn-prev">Antes</button>
@@ -13,14 +24,22 @@
   </ol>
   <ol class="calendar-list-container">
     <li
-      (click)="clickDay(day)"
+      (click)="clickDay(item)"
       [style.gridColumnStart]="first ? startDayIndex : 'auto'"
-      *ngFor="let day of monthSelect; let first = first"
+      *ngFor="let item of monthSelect; let first = first"
       class="calendar-container"
     >
-      <div class="calendar-number" [ngStyle]="{ 'background-color': day?.state?.color ?? '#ffffff' }">
-        <span>{{ day?.value }}</span>
-        <div class="d">{{ day?.data?.state ?? '-' | uppercase}}</div>
+      <div
+        class="calendar-number"
+        [ngStyle]="{ 'background-color': item.detail.state ? statesDictionary[item.detail.state].color : '#ffffff' }"
+        [style]="(
+          month == worker.tareos[0].month
+          && year == worker.tareos[0].year
+          && day == item.currentDate.day
+        ) ? 'border: 1px solid #1890ff; color: #1890ff; font-weight: bolder;' : ''"
+      >
+        <span>{{ item.currentDate.day }}</span>
+        <div>{{ item.detail.state || '-' | uppercase}}</div>
         <!-- <input type="text" name="text" id="text"> -->
       </div>
     </li>
@@ -46,4 +65,41 @@
 </div>
 
 <hr />
-<div>Fecha: {{ dateValue | date }}</div>
+<div class="resume">
+  <div class="resume_container">
+    <div class="resume_container_title">
+      <span style="font-weight: 700;">Resumen del Mes:</span>
+    </div>
+    <div class="resume_container_content">
+      <!-- border-bottom-color: aqua; -->
+      <div
+        class="resume_container_content_item"
+        *ngFor="let item of orderedWorkDays"
+        [ngStyle]="
+        { 
+          'border-bottom-color': statesDictionary[workDayDetail[item].prefix]
+            ? statesDictionary[workDayDetail[item].prefix].color
+            : '#ffffff'
+        }"
+      >
+        <div class="resume_container_content_item_text">
+          <div
+            class="dot"
+            [ngStyle]="
+            { 
+              'background-color': statesDictionary[workDayDetail[item].prefix]
+                ? statesDictionary[workDayDetail[item].prefix].color
+                : '#ffffff'
+            }"
+          ></div>
+          <span>&nbsp;{{ workDayDetail[item].title }}</span>
+        </div>
+        <span>{{ workDayDetail[item].value }} días</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal_footer">
+<button nz-button (click)="close()">Cerrar</button>
+<button nz-button nzType="primary" (click)="generateReport()">Generar Reporte</button>
+</div>

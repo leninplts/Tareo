@@ -61,8 +61,7 @@ export class TareoService {
       id,
     });
     tareo.tareo = inTareo;
-    await this.tareoRepository.save(tareo);
-    return `Tareo actualizado`;
+    return await this.tareoRepository.save(tareo);
   }
 
   remove(id: number) {
