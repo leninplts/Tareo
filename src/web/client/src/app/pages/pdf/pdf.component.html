@@ -1,0 +1,109 @@
+<div class="rp-container">
+  <div class="rp-header">
+    {{ company.name }}
+  </div>
+  <div class="rp-title">
+    <span>HOJA DE TAREO DE PERSONAL</span>
+  </div>
+  <div class="rp-main-header">
+    <div class="rp-main-header-item">
+      <span class="fixed-size text-bolder">FECHA: </span>
+      <span class="text-bold" style="text-transform: capitalize;">{{today}}</span>
+    </div>
+    <div class="rp-main-header-item">
+      <span class="fixed-size text-bolder">UBICACION: </span>
+      <span class="text-bold">{{company.ubication}}</span>
+    </div>
+    <div class="rp-main-header-item">
+      <span class="fixed-size text-bolder">REPORTE: </span>
+      <span class="text-bold" style="text-transform: capitalize;">{{startDate}} al {{endDate}}</span>
+    </div>
+  </div>
+  <div class="rp-header" style="text-transform: uppercase;">
+    {{ month }}
+  </div>
+  <div class="table">
+
+    <div class="row header">
+      <div class="cell">Nombre</div>
+      <div class="cell">DNI</div>
+      <div class="cell" *ngFor="let item of tareo">
+        <div class="row">{{ week[item.iWeekDay! - 1] }}</div>
+        <div class="row">{{ item.day }}</div>
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="cell">{{ worker.name }}</div>
+      <div class="cell">{{ worker.dni }}</div>
+      <div class="cell" *ngFor="let item of tareo">
+        {{ item.state || '-' }}
+      </div>
+    </div>
+  
+  </div>
+  <table class="table">
+    <tr>
+      <th>
+        <tr rowspan="2" style="display: flex; justify-content: center; align-items: center;">Trabajadores</tr>
+        <tr style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dotted gray">
+          <th style="margin-left: 10px;">Nombre</th>
+          <th style="margin-right: 10px;">DNI</th>
+        </tr>
+      </th>
+      <th *ngFor="let item of tareo" style="text-align: center; background: #b8e9f2; border: 1px dotted gray;">
+        <div class="">{{ week[item.iWeekDay! - 1] }}</div>
+        <div class="">{{ item.day }}</div>
+        <!-- <tr style="display: flex; justify-content: center; align-items: center; min-width: 18px;">{{ week[item.iWeekDay! - 1] }}</tr>
+        <tr style="display: flex; justify-content: center; align-items: center; min-width: 18px;">{{ item.day }}</tr> -->
+      </th>
+    </tr>
+    <tr>
+      <td>
+        <tr style="display: flex; justify-content: space-around; align-items: center; border-bottom: 1px dotted gray">
+          <td>{{ worker.name }}</td>
+          <td>{{ worker.dni }}</td>
+        </tr>
+      </td>
+      <td *ngFor="let item of tareo" style="min-width: 100%; padding: 0; margin: 0;">
+        <tr style="width: 100%; padding: 0; margin: 0; display: flex; justify-content: center; align-items: center; border: 1px dotted gray"
+        [ngStyle]="{ 'background-color': item.state ? statesDictionary[item.state].color : '#ffffff' }"
+        >{{ item.state || '-' }}</tr>
+      </td>
+    </tr>
+  </table>
+  <div class="resume">
+    <div class="resume_container">
+      <!-- <div class="resume_container_title">
+        <span style="font-weight: 700;">Resumen del Mes:</span>
+      </div> -->
+      <div class="resume_container_content">
+        <!-- border-bottom-color: aqua; -->
+        <div
+          class="resume_container_content_item"
+          *ngFor="let item of orderedWorkDays"
+          [ngStyle]="
+          { 
+            'border-bottom-color': statesDictionary[workDayDetail[item].prefix]
+              ? statesDictionary[workDayDetail[item].prefix].color
+              : '#ffffff'
+          }"
+        >
+          <div class="resume_container_content_item_text">
+            <div
+              class="dot"
+              [ngStyle]="
+              { 
+                'background-color': statesDictionary[workDayDetail[item].prefix]
+                  ? statesDictionary[workDayDetail[item].prefix].color
+                  : '#ffffff'
+              }"
+            ></div>
+            <span>&nbsp;Total de {{ workDayDetail[item].title }}</span>
+          </div>
+          <span>{{ workDayDetail[item].value }} días</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -6,6 +6,9 @@ import { ITareo, Worker } from 'src/app/features/interfaces/worker.interface';
 import { TareoService } from 'src/app/core/services/tareo.service';
 import { IState } from 'src/app/features/interfaces/states.inteface';
 import { statesDictionary } from 'src/app/features/models/state.model';
+import { Router } from '@angular/router';
+import { PdfService } from 'src/app/core/services/pdf.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-tareo',
@@ -17,7 +20,7 @@ export class TareoComponent implements OnInit {
   @Input() edit: boolean;
 
   statesDictionary = statesDictionary
-  week: any = [
+  week: string[] = [
     'Lunes',
     'Martes',
     'Miercoles',
@@ -56,6 +59,8 @@ export class TareoComponent implements OnInit {
     private modalService: NzModalService,
     private tareoService: TareoService,
     private modalRef: NzModalRef,
+    private router: Router,
+    private pdfService: PdfService
   ) {}
 
   ngOnInit(): void {
@@ -187,6 +192,15 @@ export class TareoComponent implements OnInit {
 
   // reports
   generateReport() {
-    console.log('generar reporte');
+    let newWorker = JSON.parse(JSON.stringify(this.worker)) as Worker;
+    newWorker.tareos[0].tareo.map(t => {
+      t.iWeekDay =  moment(`${newWorker.tareos[0].year}-${newWorker.tareos[0].month}-${t.day <= 9 ? `0${t.day}` : t.day + ''}T06:00:00`).isoWeekday();
+      t.week = this.week[t.iWeekDay - 1].split('')[0];
+      t.state = t.state || '-'
+    })
+    console.log(newWorker);
+    // newWorker.name.split(' ').join('-')
+    this.pdfService.create(newWorker, this.today).pipe(take(1)).subscribe()
+    // this.router.navigateByUrl('/pdf', { state: this.worker });
   }
 }

@@ -14,6 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgZorroAntdModule } from './ngZorroAntdModule';
 import { TareoComponent } from './features/components/modal/tareo/tareo.component';
 import { HttpClientModule } from '@angular/common/http';
+import { PdfComponent } from './pages/pdf/pdf.component';
 registerLocaleData(localeEs, 'es')
 
 @NgModule({
@@ -21,7 +22,8 @@ registerLocaleData(localeEs, 'es')
     AppComponent,
     DashboardComponent,
     TareoFormComponent,
-    TareoComponent
+    TareoComponent,
+    PdfComponent
   ],
   imports: [
     HttpClientModule,

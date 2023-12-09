@@ -15,7 +15,10 @@ interface Tareo {
 interface ITareo {
   day: number,
   state?: string,
-  note?: string
+  note?: string,
+  iWeekDay?: number,
+  week?: string,
+  color?: string
 }
 
 export {

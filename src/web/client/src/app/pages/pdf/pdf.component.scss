@@ -1,0 +1,125 @@
+.rp-container {
+  width: 100%;
+  color: #000;
+  font-size: 16px;
+  // padding: 40px;
+}
+
+.rp-header {
+  width: 100%;
+  text-align: center;
+  font-size: 19px;
+  font-weight: bolder;
+  border: 2px solid #009998;
+  line-height: 40px;
+  // background: #8d8d8d;
+}
+
+.rp-title {
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.rp-main-header {
+  display: flex;
+  flex-direction: column;
+  font-size: 15px;
+  margin: 20px 0;
+}
+
+.rp-main-header-item {
+  width: 100%;
+  display: flex;
+  margin: 4px;
+}
+
+.fixed-size {
+  display: block;
+  width: 150px;
+}
+
+.text-bold {
+  font-weight: 600;
+}
+
+.text-bolder {
+  font-weight: 700;
+}
+
+// table section
+
+// .table {
+//   width: 100%;
+//   text-align: center;
+// }
+
+// .table, tr, th {
+//   text-align: center;
+// }
+
+.table {
+  width: 100%; 
+  display: table;
+  table-layout: fixed;
+}
+
+.row {
+  display: table-row;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.cell {
+  display: table-cell;
+  border: 1px dotted #ccc;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.cell:nth-child(1) {
+  width: 200px; 
+}
+.cell:nth-child(2) {
+  width: 100px; 
+}
+
+.header {
+  font-weight: bold;  
+}
+
+// resume section
+
+.resume {
+  margin-top: 20px;
+  padding: 10px 20px;
+  width: 400px;
+  // background: #f5f5f5;
+}
+.resume_container {
+  width: 100%;
+}
+.resume_container_content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.resume_container_content_item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px dotted;
+  margin: 5px 0;
+}
+.resume_container_content_item_text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.resume_container_content_item_text div.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2.5px;
+}
