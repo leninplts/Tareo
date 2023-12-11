@@ -1,5 +1,5 @@
+import { createPdf } from '@leninlb/nestjs-html-to-pdf';
 import { Injectable } from '@nestjs/common';
-import { createPdf } from '@saemhco/nestjs-html-pdf';
 import * as path from 'path';
 import { Worker } from 'src/interfaces/worker.interface';
 

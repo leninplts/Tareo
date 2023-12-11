@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://tareoservice.libbagroup.com/'
+  apiUrl: 'https://test.libbagroup.com/'
 };
