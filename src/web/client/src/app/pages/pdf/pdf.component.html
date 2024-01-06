@@ -1,4 +1,4 @@
-<div class="rp-container">
+<div class="rp-container" id="pdf-generation">
   <div class="rp-header">
     {{ company.name }}
   </div>
@@ -27,8 +27,12 @@
     <div class="row header">
       <div class="cell">Nombre</div>
       <div class="cell">DNI</div>
-      <div class="cell" *ngFor="let item of tareo">
-        <div class="row">{{ week[item.iWeekDay! - 1] }}</div>
+      <div class="cell" style="background-color: #b8e9f2" *ngFor="let item of tareo">
+        <div class="row">
+          <div class="cell">
+            {{ week[item.iWeekDay! - 1] }}
+          </div>
+        </div>
         <div class="row">{{ item.day }}</div>
       </div>
     </div>
@@ -36,13 +40,17 @@
     <div class="row">
       <div class="cell">{{ worker.name }}</div>
       <div class="cell">{{ worker.dni }}</div>
-      <div class="cell" *ngFor="let item of tareo">
+      <div 
+        class="cell"
+        *ngFor="let item of tareo"
+        [ngStyle]="{ 'background-color': item.state && item.state != '-' ? statesDictionary[item.state].color : '#ffffff' }"
+      >
         {{ item.state || '-' }}
       </div>
     </div>
   
   </div>
-  <table class="table">
+  <!-- <table class="table">
     <tr>
       <th>
         <tr rowspan="2" style="display: flex; justify-content: center; align-items: center;">Trabajadores</tr>
@@ -54,8 +62,6 @@
       <th *ngFor="let item of tareo" style="text-align: center; background: #b8e9f2; border: 1px dotted gray;">
         <div class="">{{ week[item.iWeekDay! - 1] }}</div>
         <div class="">{{ item.day }}</div>
-        <!-- <tr style="display: flex; justify-content: center; align-items: center; min-width: 18px;">{{ week[item.iWeekDay! - 1] }}</tr>
-        <tr style="display: flex; justify-content: center; align-items: center; min-width: 18px;">{{ item.day }}</tr> -->
       </th>
     </tr>
     <tr>
@@ -67,11 +73,11 @@
       </td>
       <td *ngFor="let item of tareo" style="min-width: 100%; padding: 0; margin: 0;">
         <tr style="width: 100%; padding: 0; margin: 0; display: flex; justify-content: center; align-items: center; border: 1px dotted gray"
-        [ngStyle]="{ 'background-color': item.state ? statesDictionary[item.state].color : '#ffffff' }"
+        [ngStyle]="{ 'background-color': item.state && item.state != '-' ? statesDictionary[item.state].color : '#ffffff' }"
         >{{ item.state || '-' }}</tr>
       </td>
     </tr>
-  </table>
+  </table> -->
   <div class="resume">
     <div class="resume_container">
       <!-- <div class="resume_container_title">

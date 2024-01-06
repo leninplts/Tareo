@@ -21,6 +21,14 @@ export class TareoService {
       throw new BadRequestException({
         message: `El nombre: ${workerId} aun no existe`,
       });
+    const workerTareo = await this.workerRepository
+      .createQueryBuilder('worker')
+      .leftJoinAndSelect('worker.tareos', 'tareo')
+      .where(`worker.id = ${worker.id}`)
+      .andWhere(`tareo.year = ${year}`)
+      .andWhere(`tareo.month = ${month}`)
+      .getOne();
+    if (workerTareo) return workerTareo;
     const item = await this.tareoRepository.create(createTareoDto);
     item.worker = worker;
     await this.tareoRepository.save(item);

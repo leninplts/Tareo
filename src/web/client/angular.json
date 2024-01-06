@@ -17,6 +17,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "html2pdf.js"
+            ],
             "outputPath": "dist/tareo",
             "index": "src/index.html",
             "main": "src/main.ts",

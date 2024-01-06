@@ -2,6 +2,7 @@ import { statesDictionary } from 'src/app/features/models/state.model';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ITareo, Worker } from 'src/app/features/interfaces/worker.interface';
+import * as html2pdf from 'html2pdf.js'
 
 @Component({
   selector: 'app-pdf',
@@ -44,7 +45,6 @@ export class PdfComponent implements OnInit {
   }
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {
-    console.log('pdf');
     this.worker = this.router.getCurrentNavigation()?.extras.state as Worker;
     this.tareo = this.worker.tareos[0].tareo
   }
@@ -54,12 +54,9 @@ export class PdfComponent implements OnInit {
     this.startDate = new Date(this.worker.tareos[0].year, this.worker.tareos[0].month - 1, 1).toLocaleDateString('es-ES', { weekday:"long", year:"numeric", month:"short", day:"numeric"});
     this.endDate = new Date(this.worker.tareos[0].year, this.worker.tareos[0].month, 0).toLocaleDateString('es-ES', { weekday:"long", year:"numeric", month:"short", day:"numeric"});
     this.month = new Date(this.worker.tareos[0].year, this.worker.tareos[0].month - 1, 1).toLocaleDateString('es-ES', { year:"numeric", month:"long"});
-    console.log(this.startDate);
-    console.log(this.endDate);
-    console.log(this.month);
+    this.generatePDF()
   }
   fillCounters() {
-    console.log(this.worker);
     this.worker.tareos[0].tareo.forEach(t => {
       if(t.state == 'DL') ++this.workDayDetail.workedDays.value
       if(t.state == 'DD') ++this.workDayDetail.restDays.value
@@ -67,5 +64,36 @@ export class PdfComponent implements OnInit {
       if(t.state == 'FI') ++this.workDayDetail.unjustifiedAbsenceDays.value
       if(t.state == '') ++this.workDayDetail.noFilledDays.value
     })
+  }
+
+  generatePDF() {
+    console.log(this.worker);
+    var content = document.getElementById('pdf-generation');
+    var options = {
+      margin:       3,
+      filename:     `${this.worker.name.split(' ').join('_')}-${this.worker.dni}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas: {
+        scale: 3,
+        y: 0,
+        scrollY: 0,
+        //bottom: 20,
+        onrendered: function(){}
+      },
+      jsPDF: {
+        orientation: 'landscape',
+        //unit: 'px', hotfixes: ["px_scaling"],
+        format: 'legal',//a4
+        putOnlyUsedFonts:true,
+        //floatPrecision: 16
+      }
+    };
+    html2pdf()
+    .from(content)
+    .set(options)
+    .save()
+    .then(() => {
+      this.router.navigateByUrl('/');
+    });
   }
 }

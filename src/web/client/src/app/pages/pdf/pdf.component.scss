@@ -77,6 +77,10 @@
   border: 1px dotted #ccc;
   text-align: center;
   vertical-align: middle;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  align-self: center;
 }
 
 .cell:nth-child(1) {
