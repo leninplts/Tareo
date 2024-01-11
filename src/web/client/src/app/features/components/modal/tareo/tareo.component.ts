@@ -121,8 +121,9 @@ export class TareoComponent implements OnInit {
   }
 
   createTareo(year: number, month: number) {
-    const startDate = moment.utc(`${year}-${month <= 9 ? `0${month}` : month}-01 06:00:00`);
+    const startDate = moment.utc(`${year}-${month <= 9 ? `0${month}` : month}-01T06:00:00`);
     const endDate = startDate.clone().endOf('month');
+    console.log({startDate, endDate});
     const diffDays = endDate.diff(startDate, 'days', true);
     const numberDays = Math.round(diffDays);
     const arrayDays = Object.keys([...Array(numberDays)]).map((a: any) => {
@@ -139,6 +140,7 @@ export class TareoComponent implements OnInit {
   getDaysFromDate(year: number, month: number) {
     const startDate = moment.utc(`${year}-${month <= 9 ? `0${month}` : month}-01T06:00:00`);
     const endDate = startDate.clone().endOf('month');
+    console.log({startDate, endDate});
     this.dateSelect = startDate;
 
     const diffDays = endDate.diff(startDate, 'days', true);
@@ -159,10 +161,10 @@ export class TareoComponent implements OnInit {
   changeMonth(flag: number) {
     if (flag < 0) {
       const prevDate = this.dateSelect.clone().subtract(1, 'month');
-      this.getTareoByWorker(prevDate.format('YYYY'), prevDate.format('MM'))
+      this.getTareoByWorker(prevDate.format('YYYY'), +prevDate.format('MM'))
     } else {
       const nextDate = this.dateSelect.clone().add(1, 'month');
-      this.getTareoByWorker(nextDate.format('YYYY'), nextDate.format('MM'));
+      this.getTareoByWorker(nextDate.format('YYYY'), +nextDate.format('MM'));
     }
   }
 
