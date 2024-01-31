@@ -16,6 +16,7 @@ interface ITareo {
   day: number,
   state?: string,
   note?: string,
+  hours?: string,
   iWeekDay?: number,
   week?: string,
   color?: string

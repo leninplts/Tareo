@@ -33,13 +33,15 @@ export class TareoFormComponent implements OnInit {
     this.formGroup = this.formBuilder.group({
       stateId: new FormControl(0, [Validators.min(1), Validators.required]),
       note: new FormControl('', []),
+      hours: new FormControl('', []),
     })
   }
 
   fillFormValue() {
     this.formGroup.patchValue({
       stateId: this.tareo.state ?? 0,
-      note: this.tareo.note
+      note: this.tareo.note,
+      hours: this.tareo.hours,
     })
   }
 
@@ -51,7 +53,8 @@ export class TareoFormComponent implements OnInit {
     this.worker.tareos[0].tareo.map((t: ITareo) => {
       if(t.day == this.tareo.day) {
         t.state = this.formGroup.getRawValue().stateId ?? '',
-        t.note = this.formGroup.getRawValue().note ?? ''
+        t.note = this.formGroup.getRawValue().note ?? '',
+        t.hours = this.formGroup.getRawValue().hours ?? ''
       }
     })
     let body = {

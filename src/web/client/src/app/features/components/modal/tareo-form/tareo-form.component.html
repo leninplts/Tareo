@@ -56,6 +56,25 @@
         </div>
         <div
           class="info_size"
+          nz-col
+          nzXXl="24"
+          nzXl="24"
+          nzLg="24"
+          nzMd="24"
+          nzSm="24"
+          nzXs="24"
+        >
+          <nz-form-item>
+            <nz-form-control nzHasFeedback nzErrorTip="Ingrese la cantidad de horas laboradas">
+              <nz-form-label>Horas Laboradas</nz-form-label>
+              <nz-input-group>
+                <input nz-input formControlName="hours" placeholder="Ingrese horas laboradas" />
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div
+          class="info_size"
           style="width: 100%; display: flex; justify-content: space-between;"
         >
         <button nz-button (click)="onCancel()">Cancelar</button>

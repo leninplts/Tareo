@@ -123,7 +123,6 @@ export class TareoComponent implements OnInit {
   createTareo(year: number, month: number) {
     const startDate = moment.utc(`${year}-${month <= 9 ? `0${month}` : month}-01T06:00:00`);
     const endDate = startDate.clone().endOf('month');
-    console.log({startDate, endDate});
     const diffDays = endDate.diff(startDate, 'days', true);
     const numberDays = Math.round(diffDays);
     const arrayDays = Object.keys([...Array(numberDays)]).map((a: any) => {
@@ -132,6 +131,7 @@ export class TareoComponent implements OnInit {
         day: a,
         state: '',
         note: '',
+        hours: ''
       };
     });
     return JSON.stringify(arrayDays)
@@ -140,7 +140,6 @@ export class TareoComponent implements OnInit {
   getDaysFromDate(year: number, month: number) {
     const startDate = moment.utc(`${year}-${month <= 9 ? `0${month}` : month}-01T06:00:00`);
     const endDate = startDate.clone().endOf('month');
-    console.log({startDate, endDate});
     this.dateSelect = startDate;
 
     const diffDays = endDate.diff(startDate, 'days', true);
@@ -148,7 +147,7 @@ export class TareoComponent implements OnInit {
     this.startDayIndex = startDate.isoWeekday()
     const arrayDays = Object.keys([...Array(numberDays)]).map((a: any) => {
       a = parseInt(a) + 1;
-      const dayObject = moment(`${year}-${month}-${a <= 9 ? `0${a}` : a + ''}T06:00:00`);
+      const dayObject = moment(`${year}-${month <= 9 ? `0${month}` : month}-${a <= 9 ? `0${a}` : a + ''}T06:00:00`);
       const tareo = this.worker.tareos[0].tareo.find(tareo => tareo.day == a);
       return {
         currentDate: { year, month, day: a, date: dayObject },
@@ -183,6 +182,7 @@ export class TareoComponent implements OnInit {
       nzComponentParams: { item: body }
     });
     myModal.afterClose.subscribe((result) => {
+      if (result == undefined) return;
       if(result.edit && result.edit == true) this.getTareoByWorker(item.currentDate.year, item.currentDate.month)
     })
   }
